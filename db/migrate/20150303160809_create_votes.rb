@@ -9,5 +9,6 @@ class CreateVotes < ActiveRecord::Migration
     end
     add_index :votes, :task_id
     add_index :votes, :user_id
+    add_index :votes, [:task_id, :user_id], unique: true
   end
 end

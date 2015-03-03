@@ -6,6 +6,6 @@ class CreateVoteCounts < ActiveRecord::Migration
 
       t.timestamps null: false
     end
-    add_index :vote_counts, :task_id
+    add_index :vote_counts, :task_id, unique: true
   end
 end
