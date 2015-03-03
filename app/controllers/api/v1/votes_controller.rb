@@ -3,7 +3,7 @@ class Api::V1::VotesController < ApplicationController
     with_user_id do |user_id|
       task_id = params.require(:task_id)
       with_task(task_id) do
-        vote = Vote.first_or_create task_id: task_id, user_id: user_id
+        vote = Vote.find_or_create_by! task_id: task_id, user_id: user_id
         rep = { id: vote.id, user_id: user_id, task_id: task_id, revision: vote.revision }
         render json: rep, status: 201
       end
@@ -14,7 +14,7 @@ class Api::V1::VotesController < ApplicationController
     with_user_id do |user_id|
       task_id = params.require(:task_id)
       with_task(task_id) do
-        vote = Vote.find_by task_id: task_id, user_id: user_id
+        vote = Vote.find_by! task_id: task_id, user_id: user_id
         vote.destroy
         content_type "application/json"
         render nothing: true
@@ -32,7 +32,7 @@ class Api::V1::VotesController < ApplicationController
 
     if res.code == '200'
       json = JSON.parse(res.body)
-      user_id = json["user_id"]
+      user_id = json["id"]
       yield(user_id)
     elsif res.code == '404'
       render json: { error: :not_found }, status: 404
