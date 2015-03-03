@@ -3,6 +3,7 @@ class CreateVoteCounts < ActiveRecord::Migration
     create_table :vote_counts do |t|
       t.integer :task_id, null: false
       t.integer :amount, default: 0, null: false
+      t.integer :revision, default: 1, null: false
 
       t.timestamps null: false
     end
