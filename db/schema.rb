@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20150303160831) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "vote_counts", force: :cascade do |t|
     t.integer  "task_id",                null: false
     t.integer  "amount",     default: 0, null: false
@@ -20,7 +23,7 @@ ActiveRecord::Schema.define(version: 20150303160831) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "vote_counts", ["task_id"], name: "index_vote_counts_on_task_id"
+  add_index "vote_counts", ["task_id"], name: "index_vote_counts_on_task_id", using: :btree
 
   create_table "votes", force: :cascade do |t|
     t.integer  "task_id",                null: false
@@ -30,7 +33,7 @@ ActiveRecord::Schema.define(version: 20150303160831) do
     t.datetime "updated_at",             null: false
   end
 
-  add_index "votes", ["task_id"], name: "index_votes_on_task_id"
-  add_index "votes", ["user_id"], name: "index_votes_on_user_id"
+  add_index "votes", ["task_id"], name: "index_votes_on_task_id", using: :btree
+  add_index "votes", ["user_id"], name: "index_votes_on_user_id", using: :btree
 
 end
