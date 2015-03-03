@@ -26,7 +26,6 @@ class Api::V1::VotesController < ApplicationController
 
   def with_user_id
     res = get_w("api/v1/user")
-    yield
     Rails.logger.error "*"*80
     Rails.logger.error res.body
     Rails.logger.error "*"*80
