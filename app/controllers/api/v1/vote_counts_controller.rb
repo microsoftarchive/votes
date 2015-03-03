@@ -4,4 +4,6 @@ class Api::V1::VoteCountsController < ApplicationController
     json = { id: vc.id, amount: vc.amount, revision: vc.revision, task_id: vc.task_id }
     render json: json
   end
+
+  # TODO: get the vote counts for list_id
 end
