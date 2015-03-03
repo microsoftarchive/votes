@@ -1,6 +1,6 @@
 class Api::V1::VotesController < ApplicationController
   def create
-    with_user do
+    with_user_id do |user_id|
       task_id = params.require(:task_id)
       with_task(task_id) do
         vote = Vote.first_or_create task_id: task_id, user_id: user_id
@@ -11,7 +11,7 @@ class Api::V1::VotesController < ApplicationController
   end
 
   def destroy
-    with_user do
+    with_user_id do |user_id|
       task_id = params.require(:task_id)
       with_task(task_id) do
         vote = Vote.find_by task_id: task_id, user_id: user_id
