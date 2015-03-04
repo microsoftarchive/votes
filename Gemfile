@@ -1,15 +1,14 @@
 source 'https://rubygems.org'
 
-ruby '2.2.0'
+ruby '2.2.1'
 
 gem 'rails', '4.2.0'
 gem 'pg'
 gem 'puma'
 gem 'rack-cors', :require => 'rack/cors'
 
-group :production do
-  gem 'rails_12factor'
-end
+gem 'foreman',        group: :development
+gem 'rails_12factor', group: :production
 
 group :development, :test do
   gem 'byebug'
