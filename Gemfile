@@ -5,6 +5,7 @@ ruby '2.2.0'
 gem 'rails', '4.2.0'
 gem 'pg'
 gem 'puma'
+gem 'rack-cors', :require => 'rack/cors'
 
 group :production do
   gem 'rails_12factor'
