@@ -47,7 +47,7 @@ class Api::V1::VotesController < ApplicationController
     list_id = params.require(:list_id)
     with_tasks(list_id) do |tasks|
       votes = tasks.map do |task|
-        Vote.where(task_id: task[:id], user_id: user_id).first
+        Vote.where(task_id: task['id'], user_id: user_id).first
       end
       votes.compact!
       render json: votes

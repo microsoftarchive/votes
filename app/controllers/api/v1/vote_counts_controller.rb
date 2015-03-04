@@ -16,7 +16,8 @@ class Api::V1::VoteCountsController < ApplicationController
   def for_list
     with_tasks(params.require(:list_id)) do |tasks|
       vote_counts = tasks.map do |task|
-        VoteCount.where(task_id: task[:id]).first
+        Rails.logger.error task.inspect
+        VoteCount.where(task_id: task['id']).first
       end
       vote_counts.compact!
       render json: vote_counts
