@@ -23,17 +23,46 @@ class Api::V1::VotesController < ApplicationController
 
   def index
     with_user_id do |user_id|
-      vote = Vote.where(task_id: params.require(:task_id), user_id: user_id).first
-      if vote
-        json = { id: vote.id, user_id: user_id, task_id: vote.task_id, revision: vote.revision }
-        render json: json
+      if params[:task_id]
+        for_task(user_id)
+      elsif params[:list_id]
+        for_list(user_id)
       elsif
-        render json: { error: :not_found }, status: 404
+        error_resp
       end
     end
   end
 
+  def for_task(user_id)
+    vote = Vote.where(task_id: params.require(:task_id), user_id: user_id).first
+    if vote
+      json = { id: vote.id, user_id: user_id, task_id: vote.task_id, revision: vote.revision }
+      render json: json
+    elsif
+      not_found_resp
+    end
+  end
+
+  def for_list(user_id)
+    list_id = params.require(:list_id)
+    with_tasks(list_id) do |tasks|
+      votes = tasks.map do |task|
+        Vote.where(task_id: task[:id], user_id: user_id).first
+      end
+      votes.compact!
+      render json: votes
+    end
+  end
+
   private
+
+  def error_resp
+    render json: { error: :server_error }, status: 500
+  end
+
+  def not_found_resp
+    render json: { error: :not_found }, status: 404
+  end
 
   def with_user_id
     res = get_w("api/v1/user")
@@ -46,9 +75,9 @@ class Api::V1::VotesController < ApplicationController
       user_id = json["id"]
       yield(user_id)
     elsif res.code == '404'
-      render json: { error: :not_found }, status: 404
+      not_found_resp
     else
-      render json: { error: :server_error }, status: 500
+      error_resp
     end
   end
 
@@ -69,9 +98,25 @@ class Api::V1::VotesController < ApplicationController
     if res.code == '200'
       yield
     elsif res.code == '404'
-      render json: { error: :not_found }, status: 404
+      not_found_resp
     else
-      render json: { error: :server_error }, status: 500
+      error_resp
+    end
+  end
+
+  def with_tasks(list_id)
+    res = get_w("api/v1/tasks?list_id=#{list_id}")
+    Rails.logger.error "*"*80
+    Rails.logger.error res.body
+    Rails.logger.error "*"*80
+
+    if res.code == '200'
+      tasks = JSON.parse(res.body)
+      yield(tasks)
+    elsif res.code == '404'
+      not_found_resp
+    else
+      error_resp
     end
   end
 end
