@@ -16,7 +16,6 @@ class Api::V1::VoteCountsController < ApplicationController
   def for_list
     with_tasks(params.require(:list_id)) do |tasks|
       vote_counts = tasks.map do |task|
-        Rails.logger.error task.inspect
         VoteCount.where(task_id: task['id']).first
       end
       vote_counts.compact!
