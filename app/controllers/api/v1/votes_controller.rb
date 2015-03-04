@@ -16,17 +16,20 @@ class Api::V1::VotesController < ApplicationController
       with_task(task_id) do
         vote = Vote.find_by! task_id: task_id, user_id: user_id
         vote.destroy
-        content_type "application/json"
-        render nothing: true
+        render nothing: true, content_type: "application/json"
       end
     end
   end
 
   def index
     with_user_id do |user_id|
-      vote = Vote.where(task_id: params.require(:task_id), user_id: user_id).first!
-      json = { id: vote.id, user_id: user_id, task_id: vote.task_id, revision: vote.revision }
-      render json: json
+      vote = Vote.where(task_id: params.require(:task_id), user_id: user_id).first
+      if vote
+        json = { id: vote.id, user_id: user_id, task_id: vote.task_id, revision: vote.revision }
+        render json: json
+      elsif
+        render json: { error: :not_found }, status: 404
+      end
     end
   end
 
