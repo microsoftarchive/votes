@@ -22,6 +22,14 @@ class Api::V1::VotesController < ApplicationController
     end
   end
 
+  def index
+    with_user_id do |user_id|
+      vote = Vote.where(task_id: params.require(:task_id), user_id: user_id).first!
+      json = { id: vote.id, user_id: user_id, task_id: vote.task_id, revision: vote.revision }
+      render json: json
+    end
+  end
+
   private
 
   def with_user_id
