@@ -5,7 +5,6 @@ threads threads_count, threads_count
 preload_app!
 
 rackup      DefaultRackup
-bind        ENV.fetch('BIND', '0.0.0.0')
 port        ENV.fetch('PORT', '3050')
 environment ENV.fetch('RACK_ENV', 'development')
 
